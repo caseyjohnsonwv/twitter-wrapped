@@ -18,6 +18,11 @@ db = SQLAlchemy(app)
 
 """DB MODEL(S)"""
 
+class AuthToken(db.Model):
+    username = db.Column(db.String(20), primary_key=True)
+    token = db.Column(db.String(100))
+    secret = db.Column(db.String(100))
+
 class Tweet(db.Model):
     username = db.Column(db.String(20), primary_key=True)
     timestamp = db.Column(db.DateTime(), primary_key=True)
@@ -30,19 +35,7 @@ class Tweet(db.Model):
 """SUPPORTING FUNCTIONS"""
 
 def getApiInstance():
-    """
-    returns: tweepy api object authenticated with oauth2
-    """
-    auth = tweepy.AppAuthHandler(env.TWITTER_API_KEY, env.TWITTER_API_SECRET)
-    api = tweepy.API(auth)
-    return api
-
-def getTopTweets(username):
-    """
-    username: str -> screen name of a twitter user
-    returns: dictionary containing 'mostRts' and 'mostLikes' with lists of 5 tweet objects each, sorted from most to fewest
-    """
-    api = getApiInstance()
+    pass
 
 
 """FLASK ROUTES"""
@@ -51,7 +44,7 @@ def getTopTweets(username):
 def home():
     pageName = 'HOME'
     data = {'pageName':pageName}
-    return render_template('index.html', data=data)
+    return render_template('index.html', data=data, pageName=pageName)
 
 @app.route('/top', methods=['POST'])
 def top():
@@ -59,5 +52,19 @@ def top():
     mostRts = tweets['mostRts']
     mostLikes = tweets['mostLikes']
     pageName = 'TOP'
-    data = {'mostRts':mostRts, 'mostLikes':mostLikes, 'pageName':pageName}
-    return render_template('index.html', data=data)
+    data = {'mostRts':mostRts, 'mostLikes':mostLikes}
+    return render_template('index.html', data=data, pageName=pageName)
+
+@app.route('/auth')
+def start_auth():
+    pass
+
+@app.route('/callback')
+def callback():
+    pass
+
+
+"""APP DRIVER"""
+
+if __name__ == "__main__":
+    app.run()
