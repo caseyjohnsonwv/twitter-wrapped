@@ -35,33 +35,52 @@ class Tweet(db.Model):
 """SUPPORTING FUNCTIONS"""
 
 def getApiInstance():
-    pass
+    auth = tweepy.OAuthHandler(env.TWITTER_API_KEY, env.TWITTER_API_SECRET)
+    auth.access_token, auth.access_token_secret = flasksession['AUTH_TOKEN'], flasksession['AUTH_SECRET']
+
+def getTopTweets():
+    api = getApiInstance()
 
 
 """FLASK ROUTES"""
 
 @app.route('/', methods=['GET'])
 def home():
-    pageName = 'HOME'
-    data = {'pageName':pageName}
-    return render_template('index.html', data=data, pageName=pageName)
+    #load user's top tweets
+    try:
+        tweets = getTopTweets()
+    except Exception as ex:
+        print(ex)
+        return redirect('/auth')
+    #load page
+    data = {}
+    return render_template('index.html', data=data)
 
-@app.route('/top', methods=['POST'])
-def top():
-    tweets = twitter.getTopTweets()
-    mostRts = tweets['mostRts']
-    mostLikes = tweets['mostLikes']
-    pageName = 'TOP'
-    data = {'mostRts':mostRts, 'mostLikes':mostLikes}
-    return render_template('index.html', data=data, pageName=pageName)
 
 @app.route('/auth')
 def start_auth():
-    pass
+    #future addition - bypass repeat auth by caching tokens in database
+    auth = tweepy.OAuthHandler(env.TWITTER_API_KEY, env.TWITTER_API_SECRET, env.CALLBACK_URL)
+    redirect_url = auth.get_authorization_url()
+    flasksession['REQUEST_TOKEN'] = auth.request_token
+    return redirect(redirect_url)
+
 
 @app.route('/callback')
 def callback():
-    pass
+    auth = tweepy.OAuthHandler(env.TWITTER_API_KEY, env.TWITTER_API_SECRET)
+    auth.request_token = flasksession['REQUEST_TOKEN']
+    del flasksession['REQUEST_TOKEN']
+    verifier = request.args.get('oauth_verifier')
+    auth.get_access_token(verifier)
+    #test auth
+    token, secret = auth.access_token, auth.access_token_secret
+    api = tweepy.API(auth)
+    username = api.me().screen_name
+    #future addition - commit tokens to database for oauth bypass
+    flasksession['AUTH_TOKEN'] = token
+    flasksession['AUTH_SECRET'] = secret
+    return redirect('/')
 
 
 """APP DRIVER"""
