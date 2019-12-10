@@ -5,6 +5,7 @@ from flask import Flask, redirect, request, render_template
 from flask import session as flasksession
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from heapq import nlargest
 import tweepy
 
 
@@ -24,10 +25,11 @@ class AuthToken(db.Model):
     secret = db.Column(db.String(100))
 
 class Tweet(db.Model):
+    id = db.Column(db.String(20), nullable=False)
     username = db.Column(db.String(20), primary_key=True)
     timestamp = db.Column(db.DateTime(), primary_key=True)
-    num_likes = db.Column(db.Integer(), default=0)
-    num_retweets = db.Column(db.Integer(), default=0)
+    num_likes = db.Column(db.Integer(), nullable=False, default=0)
+    num_retweets = db.Column(db.Integer(), nullable=False, default=0)
     def __repr__():
         return "<Tweet by {} at {}>".format(self.username, self.timestamp)
 
@@ -44,24 +46,28 @@ def getTweets(api):
     now = datetime.now()
     startDate = datetime(now.year, 1, 1, 0, 0, 0) #only retrieve tweets from this year
     tweets = []
-    tmpTweets = api.user_timeline(count=500, trim_user=True)
+    tmpTweets = api.user_timeline(count=500, trim_user=True, tweet_mode='extended')
     while(tmpTweets[-1].created_at > startDate):
         for tweet in tmpTweets:
-            if tweet.text[:4] != "RT @": #exclude retweets
+            if tweet.full_text[:4] != "RT @": #exclude retweets
                 tweets.append(tweet)
-        tmpTweets = api.user_timeline(max_id=tmpTweets[-1].id, count=500, trim_user=True)
-        print("Last tweet @ {}.".format(tmpTweets[-1].created_at))
+        tmpTweets = api.user_timeline(max_id=tmpTweets[-1].id, count=500, trim_user=True, tweet_mode='extended')
     if tmpTweets[0].created_at > startDate:
         for tweet in tmpTweets:
-            if tweet.created_at > startDate and tweet.text[:4] != "RT @": #exclude retweets
+            if tweet.created_at > startDate and tweet.full_text[:4] != "RT @": #exclude retweets
                 tweets.append(tweet)
     return tweets
 
-def getMostRts(tweets):
-    pass
-
-def getMostLikes(tweets):
-    pass
+def getHighlights(tweets):
+    top5Rts = nlargest(5, tweets, key=lambda t:t.retweet_count)
+    top5Likes = nlargest(5, tweets, key=lambda t:t.favorite_count)
+    labels = ['retweets','likes','text','timestamp']
+    dataRts = [(t.retweet_count, t.favorite_count, t.full_text, t.created_at) for t in top5Rts]
+    dataLikes = [(t.retweet_count, t.favorite_count, t.full_text, t.created_at) for t in top5Likes]
+    mostRts = list(zip(labels, dataRts))
+    mostLikes = list(zip(labels, dataLikes))
+    payload = {'retweets':mostRts, 'likes':mostLikes}
+    return payload
 
 
 """FLASK ROUTES"""
@@ -75,9 +81,10 @@ def home():
         return redirect('/auth')
     #load user's top tweets
     tweets = getTweets(api)
+    twitterData = getHighlights(tweets)
     #load page
-    data = {'tweetCount':len(tweets)}
-    return render_template('index.html', data=data, tweets=tweets)
+    data = {'tweetCount':len(tweets), 'mostRts':twitterData['retweets'], 'mostLikes':twitterData['likes']}
+    return render_template('index.html', data=data)
 
 @app.route('/auth')
 def start_auth():
