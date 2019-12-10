@@ -37,25 +37,47 @@ class Tweet(db.Model):
 def getApiInstance():
     auth = tweepy.OAuthHandler(env.TWITTER_API_KEY, env.TWITTER_API_SECRET)
     auth.access_token, auth.access_token_secret = flasksession['AUTH_TOKEN'], flasksession['AUTH_SECRET']
+    api = tweepy.API(auth)
+    return api
 
-def getTopTweets():
-    api = getApiInstance()
+def getTweets(api):
+    now = datetime.now()
+    startDate = datetime(now.year, 1, 1, 0, 0, 0) #only retrieve tweets from this year
+    tweets = []
+    tmpTweets = api.user_timeline(count=500, trim_user=True)
+    while(tmpTweets[-1].created_at > startDate):
+        for tweet in tmpTweets:
+            if tweet.text[:4] != "RT @": #exclude retweets
+                tweets.append(tweet)
+        tmpTweets = api.user_timeline(max_id=tmpTweets[-1].id, count=500, trim_user=True)
+        print("Last tweet @ {}.".format(tmpTweets[-1].created_at))
+    if tmpTweets[0].created_at > startDate:
+        for tweet in tmpTweets:
+            if tweet.created_at > startDate and tweet.text[:4] != "RT @": #exclude retweets
+                tweets.append(tweet)
+    return tweets
+
+def getMostRts(tweets):
+    pass
+
+def getMostLikes(tweets):
+    pass
 
 
 """FLASK ROUTES"""
 
 @app.route('/', methods=['GET'])
 def home():
-    #load user's top tweets
+    #check for user authentication
     try:
-        tweets = getTopTweets()
-    except Exception as ex:
-        print(ex)
+        api = getApiInstance()
+    except Exception:
         return redirect('/auth')
+    #load user's top tweets
+    tweets = getTweets(api)
     #load page
-    data = {}
-    return render_template('index.html', data=data)
-
+    data = {'tweetCount':len(tweets)}
+    return render_template('index.html', data=data, tweets=tweets)
 
 @app.route('/auth')
 def start_auth():
@@ -64,7 +86,6 @@ def start_auth():
     redirect_url = auth.get_authorization_url()
     flasksession['REQUEST_TOKEN'] = auth.request_token
     return redirect(redirect_url)
-
 
 @app.route('/callback')
 def callback():
