@@ -15,8 +15,16 @@ function renderRetweetChart() {
       labels: retweetCounts,
       datasets: [{
         label: "Most Retweets",
-        data: retweetCounts
+        data: retweetCounts,
+        backgroundColor: "#1dcaff"
       }]
+    },
+    options: {
+      legend: {display: false},
+      title: {
+        display: true,
+        text: 'Most retweeted tweets of the year.'
+      }
     }
   });
 }

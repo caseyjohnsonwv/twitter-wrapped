@@ -1,0 +1,15 @@
+.body-wrapper {
+  width: 90%;
+  text-align: center;
+  margin: auto;
+}
+
+.canvas-wrapper {
+  width: 60%;
+}
+
+@media (max-width: 700px) {
+  .canvas-wrapper {
+    width: 100%;
+  }
+}

@@ -24,14 +24,26 @@ class AuthToken(db.Model):
     token = db.Column(db.String(100))
     secret = db.Column(db.String(100))
 
+
 class Tweet(db.Model):
-    id = db.Column(db.String(20), nullable=False)
-    username = db.Column(db.String(20), primary_key=True)
-    timestamp = db.Column(db.DateTime(), primary_key=True)
-    num_likes = db.Column(db.Integer(), nullable=False, default=0)
-    num_retweets = db.Column(db.Integer(), nullable=False, default=0)
+    id = db.Column(db.String(20), primary_key=True)
+    screen_name = db.Column(db.String(20), nullable=False)
+    created_at = db.Column(db.DateTime(), nullable=False)
+    favorite_count = db.Column(db.Integer(), nullable=False, default=0)
+    retweet_count = db.Column(db.Integer(), nullable=False, default=0)
+    full_text = db.Column(db.String(280))
+
+    def fromTweetObj(obj):
+        self.id=tweet.id_str
+        self.screen_name=tweet.user.screen_name
+        self.created_at=tweet.created_at
+        self.favorite_count=tweet.favorite_count
+        self.retweet_count=tweet.retweet_count
+        self.full_text=tweet.full_text
+        return self
+
     def __repr__():
-        return "<Tweet by {} at {}>".format(self.username, self.timestamp)
+        return "<Tweet by {} at {}: {} RTs, {} Likes>".format(self.screen_name, self.created_at, self.retweet_count, self.favorite_count)
 
 
 """SUPPORTING FUNCTIONS"""
@@ -64,6 +76,15 @@ def getHighlights(tweets):
     mostRts = [{'retweet_count':t.retweet_count, 'favorite_count':t.favorite_count, 'full_text':t.full_text, 'created_at':t.created_at} for t in top5Rts]
     mostLikes = [{'retweet_count':t.retweet_count, 'favorite_count':t.favorite_count, 'full_text':t.full_text, 'created_at':t.created_at} for t in top5Likes]
     payload = {'mostRts':mostRts, 'mostLikes':mostLikes}
+    """
+    for tweet in top5Rts:
+        t = Tweet.fromTweetObj(tweet)
+        db.session.add(t)
+    for tweet in top5Likes:
+        t = Tweet.fromTweetObj(tweet)
+        db.session.add(t)
+    db.session.commit()
+    """
     return payload
 
 
