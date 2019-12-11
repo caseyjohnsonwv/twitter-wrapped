@@ -2,14 +2,27 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <script type="text/javascript">var pkg = {{data|tojson}}</script>
+    <link rel="stylesheet" href="../static/index.css">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+    <script src="../static/index.js"></script>
+    <script type="text/javascript">var data={{data|tojson}}</script>
     <title>Twitter Wrapped</title>
   </head>
   <body>
-    <p>{{data.tweetCount}}</p>
-    <br>
-    <p>{{data.mostRts}}</p>
-    <br>
-    <p>{{data.mostLikes}}</p>
+    <div class="body-wrapper">
+
+      <div class="canvas-wrapper">
+        <canvas id="mainChart"></canvas>
+      </div>
+
+      <div class="selection-wrapper">
+        <form class="selection-form" action="index.html" method="get">
+          <input type="radio" name="chartType" value="retweets">Most Retweets</input>
+          <input type="radio" name="chartType" value="likes">Most Likes</input>
+        </form>
+      </div>
+      
+    </div>
   </body>
 </html>

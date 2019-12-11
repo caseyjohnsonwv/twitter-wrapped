@@ -61,12 +61,9 @@ def getTweets(api):
 def getHighlights(tweets):
     top5Rts = nlargest(5, tweets, key=lambda t:t.retweet_count)
     top5Likes = nlargest(5, tweets, key=lambda t:t.favorite_count)
-    labels = ['retweets','likes','text','timestamp']
-    dataRts = [(t.retweet_count, t.favorite_count, t.full_text, t.created_at) for t in top5Rts]
-    dataLikes = [(t.retweet_count, t.favorite_count, t.full_text, t.created_at) for t in top5Likes]
-    mostRts = list(zip(labels, dataRts))
-    mostLikes = list(zip(labels, dataLikes))
-    payload = {'retweets':mostRts, 'likes':mostLikes}
+    mostRts = [{'retweet_count':t.retweet_count, 'favorite_count':t.favorite_count, 'full_text':t.full_text, 'created_at':t.created_at} for t in top5Rts]
+    mostLikes = [{'retweet_count':t.retweet_count, 'favorite_count':t.favorite_count, 'full_text':t.full_text, 'created_at':t.created_at} for t in top5Likes]
+    payload = {'mostRts':mostRts, 'mostLikes':mostLikes}
     return payload
 
 
@@ -83,7 +80,7 @@ def home():
     tweets = getTweets(api)
     twitterData = getHighlights(tweets)
     #load page
-    data = {'tweetCount':len(tweets), 'mostRts':twitterData['retweets'], 'mostLikes':twitterData['likes']}
+    data = {'tweetCount':len(tweets), 'mostRts':twitterData['mostRts'], 'mostLikes':twitterData['mostLikes']}
     return render_template('index.html', data=data)
 
 @app.route('/auth')
