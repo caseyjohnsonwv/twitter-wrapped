@@ -74,8 +74,8 @@ def getTweets(api):
     return tweets
 
 def getHighlights(tweets):
-    top5Rts = nlargest(5, tweets, key=lambda t:t.retweet_count)
-    top5Likes = nlargest(5, tweets, key=lambda t:t.favorite_count)
+    top5Rts = nlargest(3, tweets, key=lambda t:t.retweet_count) #bad variable name- top 5 is now top 3
+    top5Likes = nlargest(3, tweets, key=lambda t:t.favorite_count)
     mostRts = [{'retweet_count':t.retweet_count, 'favorite_count':t.favorite_count, 'full_text':t.full_text, 'created_at':t.created_at} for t in top5Rts]
     mostLikes = [{'retweet_count':t.retweet_count, 'favorite_count':t.favorite_count, 'full_text':t.full_text, 'created_at':t.created_at} for t in top5Likes]
     payload = {'mostRts':mostRts, 'mostLikes':mostLikes}
