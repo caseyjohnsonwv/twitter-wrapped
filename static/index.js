@@ -6,13 +6,17 @@ function renderMainChart() {
 function renderRetweetChart() {
   let ctx = $("#mainChart");
   let retweetCounts = [];
+  let dates = [];
+  let full_texts = [];
   for (var i = 0; i < data.mostRts.length; i++) {
     retweetCounts.push(parseInt(data.mostRts[i].retweet_count));
+    dates.push(data.mostRts[i].created_at.slice(5, 17));
+    full_texts.push(data.mostRts[i].full_text);
   }
   var mainChart = new Chart(ctx, {
     type: "bar",
     data: {
-      labels: retweetCounts,
+      labels: dates,
       datasets: [{
         label: "Most Retweets",
         data: retweetCounts,
@@ -25,6 +29,19 @@ function renderRetweetChart() {
         display: true,
         text: 'Most retweeted tweets of the year.'
       },
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true,
+            fontSize: 20
+          }
+        }],
+        xAxes: [{
+          ticks: {
+            fontSize: 14
+          }
+        }]
+      },
       responsive: true,
       maintainAspectRatio: false
     }
@@ -32,31 +49,7 @@ function renderRetweetChart() {
 }
 
 function renderLikesChart() {
-  let ctx = $("#mainChart");
-  let likeCounts = [];
-  for (var i = 0; i < data.mostLikes.length; i++) {
-    likeCounts.push(parseInt(data.mostLikes[i].favorite_count));
-  }
-  var mainChart = new Chart(ctx, {
-    type: "bar",
-    data: {
-      labels: likeCounts,
-      datasets: [{
-        label: "Most Likes",
-        data: likeCounts,
-        backgroundColor: "#1dcaff"
-      }]
-    },
-    options: {
-      legend: {display: false},
-      title: {
-        display: true,
-        text: 'Most liked tweets of the year.'
-      },
-      responsive: true,
-      maintainAspectRatio: false
-    }
-  });
+  //copy over from retweets chart later
 }
 
 $(document).ready(function() {
