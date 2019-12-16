@@ -19,11 +19,12 @@ db = SQLAlchemy(app)
 
 """DB MODEL(S)"""
 
+"""
 class AuthToken(db.Model):
     screen_name = db.Column(db.String(20), primary_key=True)
     token = db.Column(db.String(100))
     secret = db.Column(db.String(100))
-
+"""
 
 class Tweet(db.Model):
     id = db.Column(db.String(20), primary_key=True)
@@ -124,8 +125,6 @@ def callback():
     auth.get_access_token(verifier)
     #test auth
     token, secret = auth.access_token, auth.access_token_secret
-    api = tweepy.API(auth)
-    username = api.me().screen_name
     #future addition - commit tokens to database for oauth bypass
     flasksession['AUTH_TOKEN'] = token
     flasksession['AUTH_SECRET'] = secret
