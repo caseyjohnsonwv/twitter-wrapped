@@ -24,13 +24,39 @@ function renderRetweetChart() {
       title: {
         display: true,
         text: 'Most retweeted tweets of the year.'
-      }
+      },
+      responsive: true,
+      maintainAspectRatio: false
     }
   });
 }
 
 function renderLikesChart() {
-
+  let ctx = $("#mainChart");
+  let likeCounts = [];
+  for (var i = 0; i < data.mostLikes.length; i++) {
+    likeCounts.push(parseInt(data.mostLikes[i].favorite_count));
+  }
+  var mainChart = new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: likeCounts,
+      datasets: [{
+        label: "Most Likes",
+        data: likeCounts,
+        backgroundColor: "#1dcaff"
+      }]
+    },
+    options: {
+      legend: {display: false},
+      title: {
+        display: true,
+        text: 'Most liked tweets of the year.'
+      },
+      responsive: true,
+      maintainAspectRatio: false
+    }
+  });
 }
 
 $(document).ready(function() {
@@ -39,7 +65,8 @@ $(document).ready(function() {
   renderMainChart();
 
   //bind event listeners
-  $("[name=chartType]").change(function() {
+  $("[name=chartType]").change(function(e) {
+    e.preventDefault();
     renderMainChart();
   });
 });

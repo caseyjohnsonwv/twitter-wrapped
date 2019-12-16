@@ -6,6 +6,9 @@
 
 .canvas-wrapper {
   width: 60%;
+  height: 75vh;
+  margin: auto;
+  position: relative;
 }
 
 @media (max-width: 700px) {
