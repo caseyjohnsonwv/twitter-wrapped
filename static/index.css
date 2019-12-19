@@ -1,3 +1,8 @@
+.body {
+  width: 100%;
+  font-family: Helvetica, sans-serif;
+}
+
 .body-wrapper {
   width: 90%;
   text-align: center;
@@ -7,8 +12,12 @@
 .canvas-wrapper {
   width: 60%;
   height: 75vh;
-  margin: auto;
   position: relative;
+}
+
+.hline {
+  border-top: 1px solid #cdcdcd;
+  margin: 20px 0;
 }
 
 .selection-wrapper {
@@ -19,10 +28,14 @@
   width: 200px;
   height: 50px;
   margin: 10px;
+  font-size: 18px;
+  border-radius: 3px;
+  border: 1px solid #cdcdcd;
+  background-color: #efefef;
 }
 
 .tweet-display-wrapper {
-  margin: 20px auto;
+  margin: 20px 0 40px 0;
 }
 
 .tweet-profile-image {
@@ -47,6 +60,50 @@
 }
 
 .tweet-header img {
+  vertical-align: middle;
+}
+
+.tweet-stats {
+  font-size: 20px;
+  text-align: center;
+}
+
+.tweet-stats span {
+  margin: 0 10px;
+}
+
+.footer {
+  background-color: #1dcaff;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  font-family: monospace;
+  text-align: center;
+  height: 30px;
+  line-height: 30px;
+  width: 100%;
+}
+
+.footer span {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.header {
+  background-color: #1dcaff;
+  color: white;
+  font-size: 24px;
+  font-weight: bold;
+  font-family: monospace;
+  text-align: center;
+  height: 50px;
+  line-height: 50px;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.header span {
+  display: inline-block;
   vertical-align: middle;
 }
 

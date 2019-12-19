@@ -10,12 +10,9 @@
     <title>Twitter Wrapped</title>
   </head>
   <body>
+    <div class="header"><span>Twitter -Wrapped-</span></div>
+
     <div class="body-wrapper">
-
-      <div class="header">
-
-      </div>
-
       <div class="canvas-wrapper">
         <canvas id="mainChart"></canvas>
       </div>
@@ -25,6 +22,8 @@
         <button class="selection-button" id="select-likes-chart">Most Likes</input>
       </div>
 
+      <div class="hline"></div>
+
       <div class="tweet-display-wrapper">
         {% for tweet in data.mostRts %}
           <div class="tweet-list-item">
@@ -33,16 +32,15 @@
               <span>{{ tweet.created_at }}</span>
             </div>
             <p>{{ tweet.full_text }}</p>
-            <p>RTs: {{ tweet.retweet_count }}</p>
-            <p>Likes: {{ tweet.favorite_count }}</p>
+            <div class="tweet-stats">
+              <span>RTs: {{ tweet.retweet_count }}</span>
+              <span>Likes: {{ tweet.favorite_count }}</span>
+            </div>
           </div>
         {% endfor %}
       </div>
-
-      <div class="footer">
-
-      </div>
-
     </div>
+
+    <div class="footer"><span>created by twitter/caseyjohnsonwv</span></div>
   </body>
 </html>

@@ -5,17 +5,13 @@ function renderMainChart(selection) {
 function renderRetweetChart() {
   let ctx = $("#mainChart");
   let retweetCounts = [];
-  let dates = [];
-  let full_texts = [];
   for (var i = 0; i < data.mostRts.length; i++) {
     retweetCounts.push(parseInt(data.mostRts[i].retweet_count));
-    dates.push(data.mostRts[i].created_at);
-    full_texts.push(data.mostRts[i].full_text);
   }
   var mainChart = new Chart(ctx, {
     type: "bar",
     data: {
-      labels: dates,
+      labels: retweetCounts,
       datasets: [{
         data: retweetCounts,
         backgroundColor: "#1dcaff"
@@ -25,23 +21,26 @@ function renderRetweetChart() {
       legend: {display: false},
       title: {
         display: true,
-        text: 'Most retweeted tweets of the year.'
+        text: "Most Retweets of " + new Date().getFullYear(),
+        fontSize: 20
       },
       scales: {
         yAxes: [{
           ticks: {
             beginAtZero: true,
-            fontSize: 20
+            fontSize: 14
           }
         }],
         xAxes: [{
           ticks: {
-            display: false
+            fontSize: 14
           }
         }]
       },
       responsive: true,
-      maintainAspectRatio: false
+      maintainAspectRatio: false,
+      hover: {mode: null},
+      tooltips: {enabled: false}
     }
   });
 }
@@ -56,11 +55,11 @@ $(document).ready(function() {
 
   //bind event listeners
   $("#select-retweets-chart").click(function(e) {
-    e.preventDefault();
     renderMainChart("retweets");
+    e.preventDefault();
   });
   $("#select-likes-chart").click(function(e) {
+    renderMainChart("likes");
     e.preventDefault();
-    renderMainChart("likes")
   });
 });
