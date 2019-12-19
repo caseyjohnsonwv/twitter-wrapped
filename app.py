@@ -77,8 +77,8 @@ def getTweets(api):
 def getHighlights(tweets):
     top5Rts = nlargest(5, tweets, key=lambda t:t.retweet_count)
     top5Likes = nlargest(5, tweets, key=lambda t:t.favorite_count)
-    mostRts = [{'retweet_count':t.retweet_count, 'favorite_count':t.favorite_count, 'full_text':t.full_text, 'created_at':t.created_at.strftime("%B %d, %Y")} for t in top5Rts]
-    mostLikes = [{'retweet_count':t.retweet_count, 'favorite_count':t.favorite_count, 'full_text':t.full_text, 'created_at':t.created_at.strftime("%B %d, %Y")} for t in top5Likes]
+    mostRts = [{'id_str':t.id_str, 'retweet_count':t.retweet_count, 'favorite_count':t.favorite_count, 'full_text':t.full_text, 'created_at':t.created_at.strftime("%B %d, %Y")} for t in top5Rts]
+    mostLikes = [{'id_str':t.id_str, 'retweet_count':t.retweet_count, 'favorite_count':t.favorite_count, 'full_text':t.full_text, 'created_at':t.created_at.strftime("%B %d, %Y")} for t in top5Likes]
     payload = {'mostRts':mostRts, 'mostLikes':mostLikes}
     if flasksession['NEW_AUTH']:
         dbTweets = {tweet.id:tweet for tweet in top5Rts}
@@ -104,9 +104,10 @@ def home():
     tweets = getTweets(api)
     twitterData = getHighlights(tweets)
     profileImageUrl = re.sub('_normal', '', api.me().profile_image_url)
+    screen_name = api.me().screen_name
     flasksession['NEW_AUTH'] = False
     #load page
-    data = {'mostRts':twitterData['mostRts'], 'mostLikes':twitterData['mostLikes'], 'profileImageUrl':profileImageUrl}
+    data = {'mostRts':twitterData['mostRts'], 'mostLikes':twitterData['mostLikes'], 'profileImageUrl':profileImageUrl, 'screen_name':screen_name}
     return render_template('index.html', data=data)
 
 @app.route('/auth')
