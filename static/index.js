@@ -46,17 +46,56 @@ function renderRetweetChart() {
 }
 
 function renderLikesChart() {
-  //copy over from retweets chart later
+  let ctx = $("#mainChart");
+  let likeCounts = [];
+  for (var i = 0; i < data.mostLikes.length; i++) {
+    likeCounts.push(parseInt(data.mostLikes[i].favorite_count));
+  }
+  var mainChart = new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: likeCounts,
+      datasets: [{
+        data: likeCounts,
+        backgroundColor: "#1dcaff"
+      }]
+    },
+    options: {
+      legend: {display: false},
+      title: {
+        display: true,
+        text: "Most Likes of " + new Date().getFullYear(),
+        fontSize: 20
+      },
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true,
+            fontSize: 14
+          }
+        }],
+        xAxes: [{
+          ticks: {
+            fontSize: 14
+          }
+        }]
+      },
+      responsive: true,
+      maintainAspectRatio: false,
+      hover: {mode: null},
+      tooltips: {enabled: false}
+    }
+  });
 }
 
 function toggleTweetCards(selection) {
   if (selection == "retweets") {
-    $("#mostLikes-cards").addClass("hide");
-    $("#mostRts-cards").removeClass("hide");
+    $("#mostLikes-cards").fadeOut(500).addClass("hide");
+    $("#mostRts-cards").fadeIn(500).removeClass("hide");
   }
   else {
-    $("#mostRts-cards").addClass("hide");
-    $("#mostLikes-cards").removeClass("hide");
+    $("#mostRts-cards").fadeOut(500).addClass("hide");
+    $("#mostLikes-cards").fadeIn(500).removeClass("hide");
   }
 }
 
