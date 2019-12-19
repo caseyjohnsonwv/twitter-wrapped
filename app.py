@@ -131,6 +131,10 @@ def callback():
     #future addition - commit tokens to database for oauth bypass
     flasksession['AUTH_TOKEN'] = token
     flasksession['AUTH_SECRET'] = secret
+    #quick and dirty - reset database if it's almost full
+    if db.session.query(Tweet).count() > 9500:
+        db.session.query(Tweet).delete()
+        db.sesion.commit()
     return redirect('/')
 
 
