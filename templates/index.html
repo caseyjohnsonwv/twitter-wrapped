@@ -24,8 +24,23 @@
 
       <div class="hline"></div>
 
-      <div class="tweet-display-wrapper">
+      <div id="mostRts-cards" class="tweet-display-wrapper">
         {% for tweet in data.mostRts %}
+          <div class="tweet-list-item">
+            <div class="tweet-header">
+              <img src="{{ data.profileImageUrl }}" class="tweet-profile-image">
+              <span>{{ tweet.created_at }}</span>
+            </div>
+            <p>{{ tweet.full_text }}</p>
+            <div class="tweet-stats">
+              <span>RTs: {{ tweet.retweet_count }}</span>
+              <span>Likes: {{ tweet.favorite_count }}</span>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+      <div id="mostLikes-cards" class="tweet-display-wrapper">
+        {% for tweet in data.mostLikes %}
           <div class="tweet-list-item">
             <div class="tweet-header">
               <img src="{{ data.profileImageUrl }}" class="tweet-profile-image">

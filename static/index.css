@@ -15,6 +15,10 @@
   position: relative;
 }
 
+.hide {
+  display: none;
+}
+
 .hline {
   border-top: 1px solid #cdcdcd;
   margin: 20px 0;
@@ -53,6 +57,7 @@
   height: auto;
   text-align: left;
   font-size: 16px;
+  font-family: Helvetica, sans-serif;
 }
 
 .tweet-header {

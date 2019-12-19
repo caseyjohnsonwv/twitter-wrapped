@@ -49,17 +49,31 @@ function renderLikesChart() {
   //copy over from retweets chart later
 }
 
+function toggleTweetCards(selection) {
+  if (selection == "retweets") {
+    $("#mostLikes-cards").addClass("hide");
+    $("#mostRts-cards").removeClass("hide");
+  }
+  else {
+    $("#mostRts-cards").addClass("hide");
+    $("#mostLikes-cards").removeClass("hide");
+  }
+}
+
 $(document).ready(function() {
   //load the page
   renderMainChart("retweets");
+  toggleTweetCards("retweets");
 
   //bind event listeners
   $("#select-retweets-chart").click(function(e) {
     renderMainChart("retweets");
+    toggleTweetCards("retweets");
     e.preventDefault();
   });
   $("#select-likes-chart").click(function(e) {
     renderMainChart("likes");
+    toggleTweetCards("likes");
     e.preventDefault();
   });
 });
