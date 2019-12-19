@@ -21,6 +21,35 @@
   margin: 10px;
 }
 
+.tweet-display-wrapper {
+  margin: 20px auto;
+}
+
+.tweet-profile-image {
+  border-radius: 50px;
+  margin: 0 10px 0 0;
+  width: 75px;
+  height: auto;
+}
+
+.tweet-list-item {
+  margin: 10px auto;
+  padding: 20px;
+  border: 1px solid #cdcdcd;
+  width: 80%;
+  height: auto;
+  text-align: left;
+  font-size: 16px;
+}
+
+.tweet-header {
+  font-size: 20px;
+}
+
+.tweet-header img {
+  vertical-align: middle;
+}
+
 @media (max-width: 700px) {
   .canvas-wrapper {
     width: 100%;

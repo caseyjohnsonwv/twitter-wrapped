@@ -9,7 +9,7 @@ function renderRetweetChart() {
   let full_texts = [];
   for (var i = 0; i < data.mostRts.length; i++) {
     retweetCounts.push(parseInt(data.mostRts[i].retweet_count));
-    dates.push(data.mostRts[i].created_at.slice(5, 17));
+    dates.push(data.mostRts[i].created_at);
     full_texts.push(data.mostRts[i].full_text);
   }
   var mainChart = new Chart(ctx, {
@@ -17,7 +17,6 @@ function renderRetweetChart() {
     data: {
       labels: dates,
       datasets: [{
-        label: "Most Retweets",
         data: retweetCounts,
         backgroundColor: "#1dcaff"
       }]
@@ -37,7 +36,7 @@ function renderRetweetChart() {
         }],
         xAxes: [{
           ticks: {
-            fontSize: 14
+            display: false
           }
         }]
       },
