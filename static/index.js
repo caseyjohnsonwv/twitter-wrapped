@@ -1,5 +1,4 @@
-function renderMainChart() {
-  selection = $("input[name=chartType]:checked").val()
+function renderMainChart(selection) {
   selection == "retweets" ? renderRetweetChart() : renderLikesChart();
 }
 
@@ -54,12 +53,15 @@ function renderLikesChart() {
 
 $(document).ready(function() {
   //load the page
-  $("[name=chartType]").val(["retweets"]);
-  renderMainChart();
+  renderMainChart("retweets");
 
   //bind event listeners
-  $("[name=chartType]").change(function(e) {
+  $("#select-retweets-chart").click(function(e) {
     e.preventDefault();
-    renderMainChart();
+    renderMainChart("retweets");
+  });
+  $("#select-likes-chart").click(function(e) {
+    e.preventDefault();
+    renderMainChart("likes")
   });
 });
