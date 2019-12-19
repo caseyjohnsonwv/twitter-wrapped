@@ -13,6 +13,7 @@
   width: 60%;
   height: 75vh;
   position: relative;
+  margin: auto;
 }
 
 .hide {
@@ -53,7 +54,7 @@
   margin: 10px auto;
   padding: 20px;
   border: 1px solid #cdcdcd;
-  width: 80%;
+  width: 30%;
   height: auto;
   text-align: left;
   font-size: 16px;
@@ -120,5 +121,9 @@
   .selection-button {
     width: 40%;
     height: 50px;
+  }
+
+  .tweet-list-item {
+    width: 80%;
   }
 }
