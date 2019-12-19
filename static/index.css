@@ -11,7 +11,7 @@
 
 .canvas-wrapper {
   width: 60%;
-  height: 75vh;
+  height: 50vh;
   position: relative;
   margin: auto;
 }
@@ -37,6 +37,26 @@
   border-radius: 3px;
   border: 1px solid #cdcdcd;
   background-color: #efefef;
+}
+
+.selection-wrapper button:hover {
+  cursor: pointer;
+  background-color: #cdcdcd;
+}
+
+.tweet-link {
+  margin: 20px 0 0 0;
+  text-align: right;
+  font-size: 16px;
+}
+
+.tweet-link a {
+  text-decoration: none;
+  color: #ababab;
+}
+
+.tweet-link a:hover {
+  color: #cdcdcd;
 }
 
 .tweet-display-wrapper {
@@ -95,6 +115,15 @@
   vertical-align: middle;
 }
 
+.footer a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.footer a:hover {
+  color: #efefef;
+}
+
 .header {
   background-color: #1dcaff;
   color: white;
@@ -118,9 +147,14 @@
     width: 100%;
   }
 
+  .tweet-profile-image {
+    width: 50px;
+  }
+
   .selection-button {
     width: 40%;
     height: 50px;
+    font-size: 14px;
   }
 
   .tweet-list-item {

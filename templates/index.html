@@ -36,10 +36,13 @@
               <span>RTs: {{ tweet.retweet_count }}</span>
               <span>Likes: {{ tweet.favorite_count }}</span>
             </div>
+            <div class="tweet-link">
+              <a target="_blank" href="https://twitter.com/{{ data.screen_name }}/status/{{ tweet.id_str }}">View on Twitter</a>
+            </div>
           </div>
         {% endfor %}
       </div>
-      
+
       <div id="mostLikes-cards" class="tweet-display-wrapper">
         {% for tweet in data.mostLikes %}
           <div class="tweet-list-item">
@@ -52,11 +55,14 @@
               <span>RTs: {{ tweet.retweet_count }}</span>
               <span>Likes: {{ tweet.favorite_count }}</span>
             </div>
+            <div class="tweet-link">
+              <a target="_blank" href="https://twitter.com/{{ data.screen_name }}/status/{{ tweet.id_str }}">View on Twitter</a>
+            </div>
           </div>
         {% endfor %}
       </div>
     </div>
 
-    <div class="footer"><span>created by twitter/caseyjohnsonwv</span></div>
+    <div class="footer"><span>created by <a class="footer-link" target="_blank" href="twitter.com/caseyjohnsonwv">twitter/caseyjohnsonwv</a></span></div>
   </body>
 </html>
