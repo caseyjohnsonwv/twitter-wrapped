@@ -10,8 +10,9 @@
     <title>Twitter Wrapped</title>
   </head>
   <body>
-    <div class="body-wrapper">
+    <div class="header"><span>Twitter -Wrapped-</span></div>
 
+    <div class="body-wrapper">
       <div class="canvas-wrapper">
         <canvas id="mainChart"></canvas>
       </div>
@@ -21,6 +22,41 @@
         <button class="selection-button" id="select-likes-chart">Most Likes</input>
       </div>
 
+      <div class="hline"></div>
+
+      <div id="mostRts-cards" class="tweet-display-wrapper">
+        {% for tweet in data.mostRts %}
+          <div class="tweet-list-item">
+            <div class="tweet-header">
+              <img src="{{ data.profileImageUrl }}" class="tweet-profile-image">
+              <span>{{ tweet.created_at }}</span>
+            </div>
+            <p>{{ tweet.full_text }}</p>
+            <div class="tweet-stats">
+              <span>RTs: {{ tweet.retweet_count }}</span>
+              <span>Likes: {{ tweet.favorite_count }}</span>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+      
+      <div id="mostLikes-cards" class="tweet-display-wrapper">
+        {% for tweet in data.mostLikes %}
+          <div class="tweet-list-item">
+            <div class="tweet-header">
+              <img src="{{ data.profileImageUrl }}" class="tweet-profile-image">
+              <span>{{ tweet.created_at }}</span>
+            </div>
+            <p>{{ tweet.full_text }}</p>
+            <div class="tweet-stats">
+              <span>RTs: {{ tweet.retweet_count }}</span>
+              <span>Likes: {{ tweet.favorite_count }}</span>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
     </div>
+
+    <div class="footer"><span>created by twitter/caseyjohnsonwv</span></div>
   </body>
 </html>

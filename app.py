@@ -1,6 +1,7 @@
 """APP SETUP"""
 
 import env
+import re
 from flask import Flask, redirect, request, render_template
 from flask import session as flasksession
 from flask_sqlalchemy import SQLAlchemy
@@ -74,10 +75,10 @@ def getTweets(api):
     return tweets
 
 def getHighlights(tweets):
-    top5Rts = nlargest(3, tweets, key=lambda t:t.retweet_count) #bad variable name- top 5 is now top 3
-    top5Likes = nlargest(3, tweets, key=lambda t:t.favorite_count)
-    mostRts = [{'retweet_count':t.retweet_count, 'favorite_count':t.favorite_count, 'full_text':t.full_text, 'created_at':t.created_at} for t in top5Rts]
-    mostLikes = [{'retweet_count':t.retweet_count, 'favorite_count':t.favorite_count, 'full_text':t.full_text, 'created_at':t.created_at} for t in top5Likes]
+    top5Rts = nlargest(5, tweets, key=lambda t:t.retweet_count)
+    top5Likes = nlargest(5, tweets, key=lambda t:t.favorite_count)
+    mostRts = [{'retweet_count':t.retweet_count, 'favorite_count':t.favorite_count, 'full_text':t.full_text, 'created_at':t.created_at.strftime("%B %d, %Y")} for t in top5Rts]
+    mostLikes = [{'retweet_count':t.retweet_count, 'favorite_count':t.favorite_count, 'full_text':t.full_text, 'created_at':t.created_at.strftime("%B %d, %Y")} for t in top5Likes]
     payload = {'mostRts':mostRts, 'mostLikes':mostLikes}
     if flasksession['NEW_AUTH']:
         dbTweets = {tweet.id:tweet for tweet in top5Rts}
@@ -102,9 +103,10 @@ def home():
     #load user's top tweets
     tweets = getTweets(api)
     twitterData = getHighlights(tweets)
+    profileImageUrl = re.sub('_normal', '', api.me().profile_image_url)
     flasksession['NEW_AUTH'] = False
     #load page
-    data = {'tweetCount':len(tweets), 'mostRts':twitterData['mostRts'], 'mostLikes':twitterData['mostLikes']}
+    data = {'mostRts':twitterData['mostRts'], 'mostLikes':twitterData['mostLikes'], 'profileImageUrl':profileImageUrl}
     return render_template('index.html', data=data)
 
 @app.route('/auth')

@@ -5,19 +5,14 @@ function renderMainChart(selection) {
 function renderRetweetChart() {
   let ctx = $("#mainChart");
   let retweetCounts = [];
-  let dates = [];
-  let full_texts = [];
   for (var i = 0; i < data.mostRts.length; i++) {
     retweetCounts.push(parseInt(data.mostRts[i].retweet_count));
-    dates.push(data.mostRts[i].created_at.slice(5, 17));
-    full_texts.push(data.mostRts[i].full_text);
   }
   var mainChart = new Chart(ctx, {
     type: "bar",
     data: {
-      labels: dates,
+      labels: retweetCounts,
       datasets: [{
-        label: "Most Retweets",
         data: retweetCounts,
         backgroundColor: "#1dcaff"
       }]
@@ -26,13 +21,14 @@ function renderRetweetChart() {
       legend: {display: false},
       title: {
         display: true,
-        text: 'Most retweeted tweets of the year.'
+        text: "Most Retweets of " + new Date().getFullYear(),
+        fontSize: 20
       },
       scales: {
         yAxes: [{
           ticks: {
             beginAtZero: true,
-            fontSize: 20
+            fontSize: 14
           }
         }],
         xAxes: [{
@@ -42,26 +38,81 @@ function renderRetweetChart() {
         }]
       },
       responsive: true,
-      maintainAspectRatio: false
+      maintainAspectRatio: false,
+      hover: {mode: null},
+      tooltips: {enabled: false}
     }
   });
 }
 
 function renderLikesChart() {
-  //copy over from retweets chart later
+  let ctx = $("#mainChart");
+  let likeCounts = [];
+  for (var i = 0; i < data.mostLikes.length; i++) {
+    likeCounts.push(parseInt(data.mostLikes[i].favorite_count));
+  }
+  var mainChart = new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: likeCounts,
+      datasets: [{
+        data: likeCounts,
+        backgroundColor: "#1dcaff"
+      }]
+    },
+    options: {
+      legend: {display: false},
+      title: {
+        display: true,
+        text: "Most Likes of " + new Date().getFullYear(),
+        fontSize: 20
+      },
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true,
+            fontSize: 14
+          }
+        }],
+        xAxes: [{
+          ticks: {
+            fontSize: 14
+          }
+        }]
+      },
+      responsive: true,
+      maintainAspectRatio: false,
+      hover: {mode: null},
+      tooltips: {enabled: false}
+    }
+  });
+}
+
+function toggleTweetCards(selection) {
+  if (selection == "retweets") {
+    $("#mostLikes-cards").fadeOut(500).addClass("hide");
+    $("#mostRts-cards").fadeIn(500).removeClass("hide");
+  }
+  else {
+    $("#mostRts-cards").fadeOut(500).addClass("hide");
+    $("#mostLikes-cards").fadeIn(500).removeClass("hide");
+  }
 }
 
 $(document).ready(function() {
   //load the page
   renderMainChart("retweets");
+  toggleTweetCards("retweets");
 
   //bind event listeners
   $("#select-retweets-chart").click(function(e) {
-    e.preventDefault();
     renderMainChart("retweets");
+    toggleTweetCards("retweets");
+    e.preventDefault();
   });
   $("#select-likes-chart").click(function(e) {
+    renderMainChart("likes");
+    toggleTweetCards("likes");
     e.preventDefault();
-    renderMainChart("likes")
   });
 });
