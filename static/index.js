@@ -99,20 +99,28 @@ function toggleTweetCards(selection) {
   }
 }
 
+function submitLogin() {
+  $("#login-form").submit();
+}
+
+function logOut() {
+  $("#logout-form").submit();
+}
+
 $(document).ready(function() {
   //load the page
   renderMainChart("retweets");
   toggleTweetCards("retweets");
 
   //bind event listeners
-  $("#select-retweets-chart").click(function(e) {
+  $("#select-retweets-chart").click(function(event) {
     renderMainChart("retweets");
     toggleTweetCards("retweets");
-    e.preventDefault();
+    event.preventDefault();
   });
-  $("#select-likes-chart").click(function(e) {
+  $("#select-likes-chart").click(function(event) {
     renderMainChart("likes");
     toggleTweetCards("likes");
-    e.preventDefault();
+    event.preventDefault();
   });
 });

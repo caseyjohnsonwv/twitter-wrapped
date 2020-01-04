@@ -13,6 +13,18 @@
     <div class="header"><span>Twitter -Wrapped-</span></div>
 
     <div class="body-wrapper">
+      {% if page == 'login' %}
+
+      <div class="login-wrapper">
+        <p>Enter your Twitter "@" to get started:</p>
+        <form class="login-form" id="login-form" action="auth" method='post'>
+          <input type="text" class="username-field" name="username" id="username"></input>
+        </form>
+        <button class="login-button" id="login-button" onclick="submitLogin()">Log In</button>
+      </div>
+
+      {% else %}
+
       <div class="canvas-wrapper">
         <canvas id="mainChart"></canvas>
       </div>
@@ -65,6 +77,14 @@
           </div>
         {% endfor %}
       </div>
+
+      <div class="hline"></div>
+
+      <form id="logout-form" action="logout"></form>
+      <button class="logout-button" id="logout-button" onclick="logOut()">Log Out</button>
+
+      {% endif %}
+
     </div>
 
     <div class="footer"><span>created by <a class="footer-link" target="_blank" href="https://twitter.com/caseyjohnsonwv">twitter/caseyjohnsonwv</a></span></div>
