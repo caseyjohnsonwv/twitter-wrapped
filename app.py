@@ -20,12 +20,15 @@ db = SQLAlchemy(app)
 
 """DB MODEL(S)"""
 
-"""
 class AuthToken(db.Model):
     screen_name = db.Column(db.String(20), primary_key=True)
+    last_login = db.Column(db.DateTime())
     token = db.Column(db.String(100))
     secret = db.Column(db.String(100))
-"""
+
+    def __repr__():
+        return "<AuthToken for {} from {}>".format(self.screen_name, self.last_login)
+
 
 class Tweet(db.Model):
     id = db.Column(db.String(20), primary_key=True)
@@ -95,22 +98,27 @@ def getHighlights(tweets):
 
 @app.route('/', methods=['GET'])
 def home():
-    #check for user authentication
+    #determine landing page
+    page = 'main'
     try:
         api = getApiInstance()
-    except Exception:
-        return redirect('/auth')
-    #load user's top tweets
-    tweets = getTweets(api)
-    twitterData = getHighlights(tweets)
-    profileImageUrl = re.sub('_normal', '', api.me().profile_image_url)
-    screen_name = api.me().screen_name
-    flasksession['NEW_AUTH'] = False
-    #load page
-    data = {'mostRts':twitterData['mostRts'], 'mostLikes':twitterData['mostLikes'], 'profileImageUrl':profileImageUrl, 'screen_name':screen_name}
-    return render_template('index.html', data=data)
+    except Exception as ex:
+        page = 'login'
 
-@app.route('/auth')
+    if page == 'login':
+        data = {}
+    else:
+        #load user's top tweets
+        tweets = getTweets(api)
+        twitterData = getHighlights(tweets)
+        profileImageUrl = re.sub('_normal', '', api.me().profile_image_url)
+        screen_name = api.me().screen_name
+        flasksession['NEW_AUTH'] = False
+        #load page
+        data = {'mostRts':twitterData['mostRts'], 'mostLikes':twitterData['mostLikes'], 'profileImageUrl':profileImageUrl, 'screen_name':screen_name}
+    return render_template('index.html', data=data, page=page)
+
+@app.route('/auth', methods=['POST'])
 def start_auth():
     #future addition - bypass repeat auth by caching tokens in database
     auth = tweepy.OAuthHandler(env.TWITTER_API_KEY, env.TWITTER_API_SECRET, env.CALLBACK_URL)
