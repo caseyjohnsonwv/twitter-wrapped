@@ -120,7 +120,16 @@ def home():
 
 @app.route('/auth', methods=['POST'])
 def start_auth():
-    #future addition - bypass repeat auth by caching tokens in database
+    #check db for recent previous auth
+    username = request.form.get("username")
+    exists = db.session.query(db.session.query(AuthToken).filter_by(screen_name=username).exists()).scalar()
+    if exists:
+        dbEntry = db.session.query(AuthToken).filter_by(screen_name=username).one()
+        if (datetime.now() - dbEntry.last_login).days < 7:
+            flasksession['AUTH_TOKEN'] = dbEntry.token
+            flasksession['AUTH_SECRET'] = dbEntry.secret
+            return redirect('/')
+    #begin oauth
     auth = tweepy.OAuthHandler(env.TWITTER_API_KEY, env.TWITTER_API_SECRET, env.CALLBACK_URL)
     redirect_url = auth.get_authorization_url()
     flasksession['REQUEST_TOKEN'] = auth.request_token
@@ -136,13 +145,26 @@ def callback():
     auth.get_access_token(verifier)
     #test auth
     token, secret = auth.access_token, auth.access_token_secret
-    #future addition - commit tokens to database for oauth bypass
+    #add tokens to session
     flasksession['AUTH_TOKEN'] = token
     flasksession['AUTH_SECRET'] = secret
+    #commit tokens to database
+    api = getApiInstance()
+    exists = db.session.query(db.session.query(AuthToken).filter_by(screen_name=api.me().screen_name).exists()).scalar()
+    if not exists:
+        newEntry = AuthToken(screen_name=api.me().screen_name, last_login=datetime.now(), token=token, secret=secret)
+        db.session.add(newEntry)
+        db.session.commit()
     #quick and dirty - reset database if it's almost full
     if db.session.query(Tweet).count() > 9500:
         db.session.query(Tweet).delete()
         db.sesion.commit()
+    return redirect('/')
+
+@app.route('/logout')
+def logout():
+    del flasksession['AUTH_TOKEN']
+    del flasksession['AUTH_SECRET']
     return redirect('/')
 
 

@@ -18,7 +18,7 @@
       <div class="login-wrapper">
         <p>Enter your Twitter "@" to get started:</p>
         <form class="login-form" id="login-form" action="auth" method='post'>
-          <input type="text" class="username-field" id="username"></input>
+          <input type="text" class="username-field" name="username" id="username"></input>
         </form>
         <button class="login-button" id="login-button" onclick="submitLogin()">Log In</button>
       </div>
@@ -77,6 +77,11 @@
           </div>
         {% endfor %}
       </div>
+
+      <div class="hline"></div>
+
+      <form id="logout-form" action="logout"></form>
+      <button class="logout-button" id="logout-button" onclick="logOut()">Log Out</button>
 
       {% endif %}
 

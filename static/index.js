@@ -103,6 +103,10 @@ function submitLogin() {
   $("#login-form").submit();
 }
 
+function logOut() {
+  $("#logout-form").submit();
+}
+
 $(document).ready(function() {
   //load the page
   renderMainChart("retweets");
