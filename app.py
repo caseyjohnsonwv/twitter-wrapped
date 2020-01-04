@@ -51,10 +51,13 @@ def getApiInstance():
     api = tweepy.API(auth)
     return api
 
-def getTweets(api):
+def getTweets(api, force_reload=False):
     #attempt to bypass tweet load
-    if not flasksession.get('NEW_AUTH'):
-        dbTweets = db.session.query(Tweet).filter_by(screen_name=api.me().screen_name).all()
+    if not flasksession.get('NEW_AUTH') and not force_reload:
+        try:
+            dbTweets = db.session.query(Tweet).filter_by(screen_name=api.me().screen_name).all()
+        except Exception as ex:
+            return getTweets(api, force_reload=True)
         tweetIds = [t.id for t in dbTweets]
         tweets = api.statuses_lookup(tweetIds, tweet_mode='extended')
     else:
